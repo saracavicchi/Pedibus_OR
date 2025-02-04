@@ -1,5 +1,6 @@
 from crea_visualizza_istanza import *
 from istanza_small import *
+from istanza_media import *
 
 def main():
     delta_toy = 1.5
@@ -25,7 +26,9 @@ def main():
     plot_graph_results( G_toy, percorsi_sub_NN, 'G_toy_results')
 
     ##ISTANZA SMALL
+
     istanza_small_main()
+    istanza_media_main()
 
 
 if __name__ == '__main__':
