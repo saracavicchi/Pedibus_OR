@@ -1,3 +1,5 @@
+import copy
+
 def somma_residui_percorso(residui_dict, percorso):
   """
   Restituisce la somma dei residui (della distanza massima che ciascun bambino
