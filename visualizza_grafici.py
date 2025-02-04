@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from crea_visualizza_istanza import save_img
 
-def plotSubSchResults(subsequentNN, schoolNN, name):
+def plotSubSchResults(subsequentNN, schoolNN, name, img):
 
     if name == "Greedy":
       labels = ['Greedy', 'Gr Rand']
@@ -48,10 +49,13 @@ def plotSubSchResults(subsequentNN, schoolNN, name):
 
     fig.tight_layout()
 
+    save_img(img)
+
+    # Mostra il grafico
     plt.show(block=False)
 
 
-def plotMetaheuristicsResults(grasp, tabu, ils):
+def plotMetaheuristicsResults(grasp, tabu, ils, img):
 
     labels = ['Greedy Subsequent NN', 'Greedy School NN']
 
@@ -84,13 +88,14 @@ def plotMetaheuristicsResults(grasp, tabu, ils):
 
     fig.tight_layout()
 
+    save_img(img)
 
-
+    # Mostra il grafico
     plt.show(block=False)
 
 
 
-def plot_all_results(results):
+def plot_all_results(results, img):
   
   width = 0.25  # the width of the bars
   cm = 1/2.54  # centimeters in inches
@@ -119,4 +124,7 @@ def plot_all_results(results):
   
   # Rotating X-axis labels
   plt.xticks(rotation = -25)
+  save_img(img)
+
+  # Mostra il grafico
   plt.show(block=False)

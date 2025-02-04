@@ -1,5 +1,6 @@
 import copy
 from controlli_ammissibilita import *
+from nodi_percorsi_vicini_corti import *
 
 def node_transfer(percorsi, src, G, residui_dict, delta):
     """
@@ -101,7 +102,7 @@ def node_swap(Gr, percorso, delta):
     return None
 
 
-def apply_swap(Gr, percorsi, residui_dict, percorso, swap):
+def apply_swap(G, percorsi, residui_dict, percorso, swap):
   """
   Applica lo swap al percorso specificato e aggiorna i percorsi.
   CALCOLA ANCHE I RESIDUI AGGIORNATI DEL PERCORSO

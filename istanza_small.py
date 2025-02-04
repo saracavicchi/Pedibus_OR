@@ -7,6 +7,7 @@ from grasp import *
 from tabu_search import *
 from iterated_local_search import *
 from visualizza_grafici import *
+from clark_wright import *
 
 
 def istanza_small_main():
@@ -63,7 +64,7 @@ def istanza_small_main():
     check_solution(percorsi_sch_NN, G_small, delta_small)
     schoolNN.append(sch_NN_R_obj_val)
 
-    plotSubSchResults(subsequentNN, schoolNN, "Greedy")
+    plotSubSchResults(subsequentNN, schoolNN, "Greedy", 'greedy_small.png')
 
     #percorsi_cw, cw_obj_val, residui_dict_small_cw = clark_wright(G_small, residui_dict_small, delta_small)
     #stampa_percorsi(percorsi_cw)
@@ -71,11 +72,11 @@ def istanza_small_main():
     #check_solution(percorsi_cw, G_small, delta_small)
     #ls_subsequentNN.append(cw_obj_val)
 
-    percorsi_ls_bI, ls_bI_obj_val, residui_dict_small_sub_ls_bI = local_search_bI(G_small, residui_dict_small_cw, percorsi_cw, cw_obj_val, delta_small, max_len=5)
-    stampa_percorsi(percorsi_ls_bI)
-    print(f"Funzione obiettivo: {ls_bI_obj_val}")
-    check_solution(percorsi_ls_bI, G_small, delta_small)
-    ls_subsequentNN.append(ls_bI_obj_val)
+    #percorsi_ls_bI, ls_bI_obj_val, residui_dict_small_sub_ls_bI = local_search_bI(G_small, residui_dict_small_cw, percorsi_cw, cw_obj_val, delta_small, max_len=5)
+    #stampa_percorsi(percorsi_ls_bI)
+    #print(f"Funzione obiettivo: {ls_bI_obj_val}")
+    #check_solution(percorsi_ls_bI, G_small, delta_small)
+    #ls_subsequentNN.append(ls_bI_obj_val)
 
     percorsi_ls_bI, ls_bI_obj_val, residui_dict_small_sub_ls_bI = local_search_bI(G_small, residui_dict_small_sub_NN, percorsi_sub_NN, sub_NN_obj_val, delta_small, max_len=5)
     #stampa_percorsi(percorsi_ls_bI)
@@ -101,7 +102,7 @@ def istanza_small_main():
     check_solution(percorsi_sch_ls_fI, G_small, delta_small)
     ls_schoolNN.append(sch_ls_fI_obj_val)
 
-    plotSubSchResults(ls_subsequentNN, ls_schoolNN, 'Ls')
+    plotSubSchResults(ls_subsequentNN, ls_schoolNN, 'Ls', 'ls_small.png')
 
 
 
@@ -131,13 +132,13 @@ def istanza_small_main():
     check_solution(percorsi_G_sch_fI, G_small, delta_small)
     grasp_schoolNN.append(G_sch_fI_obj_val)
 
-    plotSubSchResults(grasp_subsequentNN, grasp_schoolNN, 'GRASP' )
+    plotSubSchResults(grasp_subsequentNN, grasp_schoolNN, 'GRASP', 'grasp_small.png' )
 
-    percorsi_tabu_sub, tabu_sub_obj_val, residui_dict_small_tabu_sub = tabu_search_bI(G_small, residui_dict_small_cw, percorsi_cw, cw_obj_val, delta_small, max_len=5)
+    #percorsi_tabu_sub, tabu_sub_obj_val, residui_dict_small_tabu_sub = tabu_search_bI(G_small, residui_dict_small_cw, percorsi_cw, cw_obj_val, delta_small, max_len=5)
     #stampa_percorsi(percorsi_sub_NN)
-    print(f"Funzione obiettivo: {tabu_sub_obj_val}")
-    check_solution(percorsi_tabu_sub, G_small, delta_small)
-    tabu.append(tabu_sub_obj_val)
+    #print(f"Funzione obiettivo: {tabu_sub_obj_val}")
+    #check_solution(percorsi_tabu_sub, G_small, delta_small)
+    #tabu.append(tabu_sub_obj_val)
 
     percorsi_tabu_sub, tabu_sub_obj_val, residui_dict_small_tabu_sub = tabu_search_bI(G_small, residui_dict_small_sub_NN, percorsi_sub_NN, sub_NN_obj_val, delta_small, max_len=5)
     #stampa_percorsi(percorsi_sub_NN)
@@ -177,6 +178,6 @@ def istanza_small_main():
     check_solution(percorsi_ILS_sch_fI, G_small, delta_small)
     Ils_schoolNN.append(ILS_sch_fI_obj_val)
 
-    plotSubSchResults(Ils_subsequentNN, Ils_schoolNN, 'ILS')
+    plotSubSchResults(Ils_subsequentNN, Ils_schoolNN, 'ILS', 'ils_small.png')
 
-    plotMetaheuristicsResults(grasp_bI, tabu, ils_bI)
+    plotMetaheuristicsResults(grasp_bI, tabu, ils_bI, 'metaheuristics_small.png')

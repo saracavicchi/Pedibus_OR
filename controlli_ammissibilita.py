@@ -1,5 +1,5 @@
 import copy
-from nodi_percorsi_vicini_corti import *
+from utils import *
 
 
 def check_solution(percorsi, G, delta):
