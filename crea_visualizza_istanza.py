@@ -46,7 +46,7 @@ def plot_graph(G, name_img):
   save_img(name_img)
 
   # Mostra il grafico
-  plt.show()
+  plt.show(block=False)
 
 
 
@@ -98,7 +98,7 @@ def plot_graph_results(G, percorsi, name_img):
   save_img(name_img)
 
   # Mostra il grafico
-  plt.show()
+  plt.show(block=False)
 
 # Definizione della funzione "stampa_percorsi" che prende in input una lista di percorsi
 def stampa_percorsi(percorsi):
@@ -123,10 +123,7 @@ def stampa_percorsi(percorsi):
         print(f"Percorso {i}: {percorso_str}")
 
 
-  # Importa la libreria networkx per la creazione e la manipolazione di grafi
-import networkx as nx
-# Importa la libreria numpy per operazioni numeriche, in particolare per la generazione di numeri casuali e calcoli di distanza
-import numpy as np
+
 
 # Definizione della funzione "generate_instance" che crea un'istanza del problema "Pedibus"
 def generate_instance(num_bambini, pos_min, pos_max, seed, delta):

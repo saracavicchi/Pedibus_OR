@@ -126,7 +126,7 @@ def test_node_feasibility(G, node, percorso, delta):
       else:
         return False
 
-import copy
+
 
 def test_node_pos_k_feasibility(G, residui_dict, node, percorso, delta, k):
     """

@@ -2,6 +2,7 @@ import copy
 from nodi_percorsi_vicini_corti import *
 from funzione_obiettivo import *
 from utils import timeit
+from controlli_ammissibilita import *
 
 @timeit
 def subsequent_nearest_neighbour(G, residui_dict, delta):

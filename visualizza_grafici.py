@@ -48,7 +48,7 @@ def plotSubSchResults(subsequentNN, schoolNN, name):
 
     fig.tight_layout()
 
-    plt.show()
+    plt.show(block=False)
 
 
 def plotMetaheuristicsResults(grasp, tabu, ils):
@@ -86,7 +86,7 @@ def plotMetaheuristicsResults(grasp, tabu, ils):
 
 
 
-    plt.show()
+    plt.show(block=False)
 
 
 
@@ -119,4 +119,4 @@ def plot_all_results(results):
   
   # Rotating X-axis labels
   plt.xticks(rotation = -25)
-  plt.show()
+  plt.show(block=False)
