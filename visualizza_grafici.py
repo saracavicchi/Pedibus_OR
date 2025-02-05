@@ -68,9 +68,11 @@ def plotMetaheuristicsResults(grasp, tabu, ils, img):
 
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
 
-    rects1 = ax.bar(x - 3/2 * width , grasp, width, label='Grasp', color= '#49bff5')
-    rects2 = ax.bar(x - 1/2 * width, tabu, width, label='Tabu Search', color='#fca103')
-    rects3 = ax.bar(x + 1/2 * width, ils, width, label='Iterated Local Search', color='#fc0335')
+    # Centra le barre rispetto ai tick sull'asse x
+    rects1 = ax.bar(x - width, grasp, width, label='Grasp', color='#49bff5')  # Grasp
+    rects2 = ax.bar(x, tabu, width, label='Tabu Search', color='#fca103')  # Tabu Search
+    rects3 = ax.bar(x + width, ils, width, label='Iterated Local Search', color='#fc0335')  # Iterated Local Search
+
 
     # Add some text for labels, title and custom x-axis tick labels, etc.
     ax.set_ylabel('Risultati Metaeuristiche')
@@ -95,41 +97,44 @@ def plotMetaheuristicsResults(grasp, tabu, ils, img):
     plt.show(block=False)
 
 
-
 def plot_all_results(results, img):
-  
-  width = 0.25  # the width of the bars
-  cm = 1/2.54  # centimeters in inches
-  fig, ax = plt.subplots(figsize=(30*cm, 20*cm))
-  
+    width = 0.25  # the width of the bars
+    cm = 1 / 2.54  # centimeters in inches
+    fig, ax = plt.subplots(figsize=(30 * cm, 20 * cm))
 
-  x_labels = ['greedy subsequent NN', 'greedy school NN', 'ls best Imp subsequent NN', 'ls first Imp subsequent NN', 'ls best Imp school NN', 
-              'ls first Imp school NN', 'grasp best Imp subsequent NN', 'grasp first Imp subsequent NN', 'grasp best Imp school NN',
-              'grasp first Imp school NN', 'tabu subsequent NN', 'tabu school NN', 'ils best Imp subsequent NN', 'ils first Imp subsequent NN',
-              'ils best Imp school NN', 'ils first Imp school NN' ]
-
+    # Etichette degli assi X
+    x_labels = ['greedy subsequent NN', 'greedy school NN', 'ls best Imp subsequent NN', 'ls first Imp subsequent NN', 'ls best Imp school NN', 
+                'ls first Imp school NN', 'grasp best Imp subsequent NN', 'grasp first Imp subsequent NN', 'grasp best Imp school NN',
+                'grasp first Imp school NN', 'tabu subsequent NN', 'tabu school NN', 'ils best Imp subsequent NN', 'ils first Imp subsequent NN',
+                'ils best Imp school NN', 'ils first Imp school NN']
 
     # Numero di elementi da rappresentare
-  n = len(results)
+    n = len(results)
 
-  # Genera colori da una mappa di colori
-  colors = [plt.cm.get_cmap('rainbow')(i / n) for i in range(n)]
-  
-  ax.bar(x_labels, results, color=colors)
-  ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))  
+    # Genera colori da una mappa di colori
+    colors = [plt.cm.get_cmap('rainbow')(i / n) for i in range(n)]
 
-  ax.bar_label(results, fmt='%d')
-  
-  ax.set_ylabel('Valore funzione obiettivo')
-  ax.set_title('Risultati complessivi')
-  
-  # Rotating X-axis labels
-  plt.xticks(rotation = -25)
-  save_img(img)
+    # Grafico a barre
+    rects = ax.bar(x_labels, results, color=colors)
 
-  # Mostra il grafico
-  plt.show(block=False)
+    # Formatta i numeri sull'asse Y
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
 
+    # Etichette per le barre - usiamo rects (BarContainer)
+    ax.bar_label(rects, fmt='%d')
+
+    # Aggiungi etichette e titolo
+    ax.set_ylabel('Valore funzione obiettivo')
+    ax.set_title('Risultati complessivi')
+
+    # Ruota le etichette dell'asse X
+    plt.xticks(rotation=-25)
+
+    # Salva l'immagine
+    save_img(img)
+
+    # Mostra il grafico
+    plt.show(block=False)
 
 # Definisci una funzione per formattare l'asse delle y in minuti
 def minutes_formatter(x, pos):
@@ -155,12 +160,17 @@ def plot_time_results(results, img):
 
   # Genera colori da una mappa di colori
   colors = [plt.cm.get_cmap('rainbow')(i / n) for i in range(n)]
+
+  # Grafico a barre
+  rects = ax.bar(x_labels, results, color=colors)
   
   ax.bar(x_labels, results, color=colors)
   # Applica il formattatore all'asse y
   plt.gca().yaxis.set_major_formatter(FuncFormatter(minutes_formatter))
 
-  ax.bar_label(results, fmt='%d')
+  # Etichette per le barre(BarContainer)
+  ax.bar_label(rects, fmt='%d')
+
   
   ax.set_ylabel('Valore funzione obiettivo')
   ax.set_title('Risultati complessivi')

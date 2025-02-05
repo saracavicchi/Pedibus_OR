@@ -60,7 +60,7 @@ def iterated_local_search(G, residui_dict, percorsi, obj_val, delta, max_len, ls
             # Applica la ricerca locale
             if ls not in funzioni:
                 raise ValueError(f"Tipo di ricerca locale non valido: {ls}")
-            ls_percorsi, ls_obj_val, residui_dict_temp = funzioni[ls](G, residui_dict_temp, current_percorsi, current_obj_val, delta, max_len)
+            (ls_percorsi, ls_obj_val, residui_dict_temp), time = funzioni[ls](G, residui_dict_temp, current_percorsi, current_obj_val, delta, max_len)
             #print("LS", check_solution(ls_percorsi, G, delta))
             #print("________")
             #Applica la perturbazione

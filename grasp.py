@@ -39,11 +39,11 @@ def GRASP_subsequent_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
 
         # Genera una soluzione greedy randomizzata
         residui_dict_copy = copy.deepcopy(residui_dict)
-        g_percorsi, g_obj_val, residui_greedy = subsequent_nearest_neighbour_randomized(G, residui_dict_copy, delta, k)
+        (g_percorsi, g_obj_val, residui_greedy), time = subsequent_nearest_neighbour_randomized(G, residui_dict_copy, delta, k)
 
         # Esegui la local search sulla soluzione generata
         if ls in funzioni:
-            ls_percorsi, ls_obj_val, residui_ls = funzioni[ls](G, residui_greedy, g_percorsi, g_obj_val, delta, max_len)
+            (ls_percorsi, ls_obj_val, residui_ls), time = funzioni[ls](G, residui_greedy, g_percorsi, g_obj_val, delta, max_len)
 
 
             # Aggiorna la soluzione migliore se necessario
@@ -88,11 +88,11 @@ def GRASP_School_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
         print(i+1)
         residui_dict_copy = copy.deepcopy(residui_dict)
         # Genera una soluzione greedy randomizzata
-        g_percorsi, g_obj_val, residui_greedy = school_nearest_neighbour_randomized(G, residui_dict_copy, delta, k)
+        (g_percorsi, g_obj_val, residui_greedy), time = school_nearest_neighbour_randomized(G, residui_dict_copy, delta, k)
 
         # Esegui la local search sulla soluzione generata
         if ls in funzioni:
-            ls_percorsi, ls_obj_val, residui_ls = funzioni[ls](G, residui_greedy, g_percorsi, g_obj_val, delta, max_len)
+            (ls_percorsi, ls_obj_val, residui_ls), time = funzioni[ls](G, residui_greedy, g_percorsi, g_obj_val, delta, max_len)
 
 
             # Aggiorna la soluzione migliore se necessario
