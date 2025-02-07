@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
+import matplotlib.ticker as ticker
 import numpy as np
 from crea_visualizza_istanza import save_img
 
@@ -56,7 +57,7 @@ def plotSubSchResults(subsequentNN, schoolNN, name, img):
     plt.show(block=False)
 
 
-def plotMetaheuristicsResults(grasp, tabu, ils, img):
+def plotMetaheuristicsResults(grasp, tabu, ils, img, bestImp = True):
 
     labels = ['Greedy Subsequent NN', 'Greedy School NN']
 
@@ -75,7 +76,10 @@ def plotMetaheuristicsResults(grasp, tabu, ils, img):
 
 
     # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax.set_ylabel('Risultati Metaeuristiche')
+    if bestImp == True:
+      ax.set_ylabel('Risultati Metaeuristiche (best improvement)')
+    else:
+       ax.set_ylabel('Risultati Metaeuristiche (first improvement)')
     ax.set_title('Valore funzione obiettivo')
     ax.set_xticks(x, labels)
     ax.legend()
@@ -100,14 +104,15 @@ def plotMetaheuristicsResults(grasp, tabu, ils, img):
 def plot_all_results(results, img):
     width = 0.25  # the width of the bars
     cm = 1 / 2.54  # centimeters in inches
-    fig, ax = plt.subplots(figsize=(30 * cm, 20 * cm))
+    fig, ax = plt.subplots(figsize=(70 * cm, 30 * cm))
 
     # Etichette degli assi X
-    x_labels = ['greedy subsequent NN', 'greedy school NN', 'ls best Imp subsequent NN', 'ls first Imp subsequent NN', 'ls best Imp school NN', 
-                'ls first Imp school NN', 'grasp best Imp subsequent NN', 'grasp first Imp subsequent NN', 'grasp best Imp school NN',
-                'grasp first Imp school NN', 'tabu subsequent NN', 'tabu school NN', 'ils best Imp subsequent NN', 'ils first Imp subsequent NN',
-                'ils best Imp school NN', 'ils first Imp school NN']
-
+    x_labels = ['greedy subsequent NN', 'greedy school NN', 'greedy Rand subsequent NN', 'greedy Rand school NN', 
+            'ls best Imp subsequent NN', 'ls first Imp subsequent NN', 'ls best Imp school NN', 'ls first Imp school NN', 
+            'grasp best Imp subsequent NN', 'grasp first Imp subsequent NN', 'grasp best Imp school NN','grasp first Imp school NN', 
+            'tabu best Imp subsequent NN', 'tabu first Imp subsequent NN', 'tabu best Imp school NN', 'tabu first Imp school NN',
+            'ils best Imp subsequent NN', 'ils first Imp subsequent NN', 'ils best Imp school NN', 'ils first Imp school NN']
+    
     # Numero di elementi da rappresentare
     n = len(results)
 
@@ -129,6 +134,7 @@ def plot_all_results(results, img):
 
     # Ruota le etichette dell'asse X
     plt.xticks(rotation=-25)
+    fig.tight_layout()
 
     # Salva l'immagine
     save_img(img)
@@ -136,48 +142,114 @@ def plot_all_results(results, img):
     # Mostra il grafico
     plt.show(block=False)
 
-# Definisci una funzione per formattare l'asse delle y in minuti
+
+def seconds_formatter(x, pos):
+    return f'{int(x)} sec' 
+
+
+# Funzione per formattare l'asse delle y in minuti
 def minutes_formatter(x, pos):
-    return f'{int(x)} min'  # Formatta il valore come minuti
+    minutes = x / 60  # Converte i secondi in minuti
+    return f'{int(minutes)} min'  # Formatta il valore come minuti
 
+# Funzione per formattare il tempo in ore, minuti e secondi
+def time_formatter(x):
+    hours = int(x // 3600)
+    minutes = int((x % 3600) // 60)
+    seconds = int(x % 60)
+    return f'{hours}h {minutes}m {seconds}s'
 
+def time_formatter_small(x):
+    hours = int(x // 3600)
+    minutes = int((x % 3600) // 60)
+    seconds = int(x % 60)
+    milliseconds = int((x - int(x)) * 1000)  # Calcola i millisecondi
+    return f'{minutes}m {seconds}s {milliseconds}ms'
 
-def plot_time_results(results, img):
-  
-  width = 0.25  # the width of the bars
-  cm = 1/2.54  # centimeters in inches
-  fig, ax = plt.subplots(figsize=(30*cm, 20*cm))
-  
+# Funzione per plottare i risultati con formattazione del tempo
+def plot_time_results(results, img, medium=True):
+   
+    width = 0.2  # the width of the bars
+    cm = 1 / 2.54  # centimeters in inches
+    fig, ax = plt.subplots(figsize=(70 * cm, 30 * cm))
 
-  x_labels = ['greedy subsequent NN', 'greedy school NN', 'ls best Imp subsequent NN', 'ls first Imp subsequent NN', 'ls best Imp school NN', 
-              'ls first Imp school NN', 'grasp best Imp subsequent NN', 'grasp first Imp subsequent NN', 'grasp best Imp school NN',
-              'grasp first Imp school NN', 'tabu subsequent NN', 'tabu school NN', 'ils best Imp subsequent NN', 'ils first Imp subsequent NN',
-              'ils best Imp school NN', 'ils first Imp school NN' ]
-
+    # Etichette degli assi X
+    x_labels = ['greedy subsequent NN', 'greedy school NN', 'greedy Rand subsequent NN', 'greedy Rand school NN', 
+            'ls best Imp subsequent NN', 'ls first Imp subsequent NN', 'ls best Imp school NN', 'ls first Imp school NN', 
+            'grasp best Imp subsequent NN', 'grasp first Imp subsequent NN', 'grasp best Imp school NN','grasp first Imp school NN', 
+            'tabu best Imp subsequent NN', 'tabu first Imp subsequent NN', 'tabu best Imp school NN', 'tabu first Imp school NN',
+            'ils best Imp subsequent NN', 'ils first Imp subsequent NN', 'ils best Imp school NN', 'ils first Imp school NN']
 
     # Numero di elementi da rappresentare
-  n = len(results)
+    n = len(results)
 
-  # Genera colori da una mappa di colori
-  colors = [plt.cm.get_cmap('rainbow')(i / n) for i in range(n)]
+    # Genera colori da una mappa di colori
+    colors = [plt.cm.get_cmap('rainbow')(i / n) for i in range(n)]
 
-  # Grafico a barre
-  rects = ax.bar(x_labels, results, color=colors)
+    # Grafico a barre
+    rects = ax.bar(x_labels, results, color=colors)
+
+    if medium :
+      # Applica il formattatore all'asse Y
+      plt.gca().yaxis.set_major_formatter(FuncFormatter(minutes_formatter))
+      # Crea etichette per le barre (BarContainer)
+      labels = [time_formatter(x) for x in results]  # Usa i valori di 'results' per formattare il tempo
+    else:
+       # Applica il formattatore all'asse Y
+      plt.gca().yaxis.set_major_formatter(FuncFormatter(seconds_formatter))
+      # Crea etichette per le barre (BarContainer)
+      labels = [time_formatter_small(x) for x in results]  # Usa i valori di 'results' per formattare il tempo
+       
+
+    
+
+    # Etichette per le barre
+    ax.bar_label(rects, labels=labels, padding=3)
+
+    # Aggiungi etichetta e titolo
+    ax.set_ylabel('Valore funzione obiettivo')
+    ax.set_title('Risultati complessivi')
+
+    # Ruota le etichette dell'asse X
+    plt.xticks(rotation=-25)
+
+    # Salva l'immagine
+    save_img(img)
+
+    # Mostra il grafico
+    plt.show(block=False)
+
+
+def plot_solution_over_time(num_iterazioni, obj_vals):
+    """
+    Grafica l'evoluzione del valore della funzione obiettivo nel tempo
+    """
+    x = np.array(num_iterazioni)
+    y = np.array(obj_vals)
+    plt.scatter(x, y, color='#10a0e8')
+    plt.plot(x, y, color='#10a0e8')
+
+    # Trova il valore minimo e il suo indice
+    min_val = np.min(y)
+    min_idx = np.argmin(y)
+
+    # Evidenzia il valore minimo con un colore diverso
+    plt.scatter(x[min_idx], min_val, color='#081dd4', zorder=5)
+    plt.axhline(y=min_val, color='#081dd4', linestyle='--')
+    plt.text(x[min_idx], min_val, f'{min_val:,}', color='#081dd4', verticalalignment='bottom')
+
+    ax = plt.gca()
+
+    # Formatta i numeri sull'asse Y
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
+    # Imposta i tick dell'asse X per mostrare solo numeri interi
+    ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+
+    # Aggiungi etichette e titolo
+    plt.xlabel('Numero di Iterazioni')
+    plt.ylabel('Valore funzione obiettivo dell\'ottimo candidato')
+    plt.title('Risultati complessivi')
+
+    plt.show()
+
   
-  ax.bar(x_labels, results, color=colors)
-  # Applica il formattatore all'asse y
-  plt.gca().yaxis.set_major_formatter(FuncFormatter(minutes_formatter))
-
-  # Etichette per le barre(BarContainer)
-  ax.bar_label(rects, fmt='%d')
-
-  
-  ax.set_ylabel('Valore funzione obiettivo')
-  ax.set_title('Risultati complessivi')
-  
-  # Rotating X-axis labels
-  plt.xticks(rotation = -25)
-  save_img(img)
-
-  # Mostra il grafico
-  plt.show(block=False)

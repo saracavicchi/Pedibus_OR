@@ -4,6 +4,7 @@ from funzione_obiettivo import *
 from controlli_ammissibilita import *
 from greedy_rand import *
 from local_search import *
+from visualizza_grafici import *
 
 
 @timeit
@@ -28,6 +29,9 @@ def GRASP_subsequent_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
     best_obj_val = float('inf')  # Inizializza con un valore molto alto
     residui_best = None
 
+    iterazioni = []
+    obj_vals = []
+
     # Dizionario per la mappatura della local search
     funzioni = {
         "local_search_bI": local_search_bI,
@@ -51,8 +55,14 @@ def GRASP_subsequent_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
                 best_percorsi = copy.deepcopy(ls_percorsi)
                 best_obj_val = ls_obj_val
                 residui_best = copy.deepcopy(residui_ls)
+            
+            iterazioni.append(i+1)
+            obj_vals.append(best_obj_val)
         else:
             print("Local search non valida")
+
+    plot_solution_over_time(iterazioni, obj_vals)
+    
 
     return best_percorsi, best_obj_val, residui_best
 
@@ -77,6 +87,9 @@ def GRASP_School_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
     best_percorsi = None
     best_obj_val = float('inf')  # Inizializza con un valore molto alto
 
+    iterazioni = []
+    obj_vals = []
+
 
     # Dizionario per la mappatura della local search
     funzioni = {
@@ -100,7 +113,12 @@ def GRASP_School_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
                 best_percorsi = copy.deepcopy(ls_percorsi)
                 best_obj_val = ls_obj_val
                 residui_best = copy.deepcopy(residui_ls)
+            
+            iterazioni.append(i+1)
+            obj_vals.append(ls_obj_val)
         else:
             print("Local search non valida")
+
+    plot_solution_over_time(iterazioni, obj_vals)
 
     return best_percorsi, best_obj_val, residui_best

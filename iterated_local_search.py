@@ -6,6 +6,7 @@ from utils import timeit
 from funzione_obiettivo import *
 from controlli_ammissibilita import *
 from perturbazione_svuotamento import *
+from visualizza_grafici import *
 
 
 @timeit
@@ -44,6 +45,9 @@ def iterated_local_search(G, residui_dict, percorsi, obj_val, delta, max_len, ls
 
     iterazioni = 0
     max_iterazioni = 4
+
+    obj_vals = []
+    iterazioni_l = []
 
     T = 160  # Temperatura iniziale (più alta per accettare peggioramenti iniziali)
     T_frozen = 50  # Temperatura minima (quando fermiamo la ricerca)
@@ -90,10 +94,15 @@ def iterated_local_search(G, residui_dict, percorsi, obj_val, delta, max_len, ls
                     current_percorsi = copy.deepcopy(perturbed_percorsi)
                     current_obj_val = perturbed_obj_val
                     residui_dict_copy = copy.deepcopy(residui_dict_temp)
+            
+            obj_vals.append(best_all_obj_val)
+            iterazioni_l.append(iterazioni)
 
         # Raffredda la temperatura
         T *= alpha
+        
+        
         iterazioni += 1
 
-
+    plot_solution_over_time(iterazioni_l, obj_vals)
     return best_all_percorsi, best_all_obj_val, best_all_residui_dict
