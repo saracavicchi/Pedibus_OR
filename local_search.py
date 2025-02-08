@@ -59,7 +59,7 @@ def local_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
                 best_residui_dict = best_swap_residui
                 migliorato = True
 
-        # === FASE 2: Intensificazione (node transfer), SOLO SE Best Improvement non ha migliorato ===
+        # === FASE 2: Intensificazione - Diversificazione (node transfer), SOLO SE Best Improvement non ha migliorato ===
         if not migliorato:
             for i in range(len(current_percorsi)):
                 if len(current_percorsi[i]) <= max_len:
@@ -139,7 +139,7 @@ def local_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len):
             i += 1
 
         if not migliorato:
-            # Intensificazione
+            # Intensificazione - Diversificazione (node transfer)
             for i in range(len(new_percorsi)):
               if len(new_percorsi[i]) <= max_len:
                   ris = node_transfer(new_percorsi, i, G, residui_dict_copy, delta)

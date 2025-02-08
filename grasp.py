@@ -1,10 +1,12 @@
 import copy
+import time as tm
 from utils import timeit
 from funzione_obiettivo import *
 from controlli_ammissibilita import *
 from greedy_rand import *
 from local_search import *
 from visualizza_grafici import *
+
 
 
 @timeit
@@ -25,11 +27,13 @@ def GRASP_subsequent_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
     - best_percorsi: i percorsi della soluzione migliore.
     - best_obj_val: il valore obiettivo della soluzione migliore.
     """
+    start_time = tm.time()
+    times_l = []
     best_percorsi = None
     best_obj_val = float('inf')  # Inizializza con un valore molto alto
     residui_best = None
 
-    iterazioni = []
+    
     obj_vals = []
 
     # Dizionario per la mappatura della local search
@@ -56,12 +60,13 @@ def GRASP_subsequent_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
                 best_obj_val = ls_obj_val
                 residui_best = copy.deepcopy(residui_ls)
             
-            iterazioni.append(i+1)
+            cur_time = tm.time() - start_time
+            times_l.append(cur_time)
             obj_vals.append(best_obj_val)
         else:
             print("Local search non valida")
 
-    plot_solution_over_time(iterazioni, obj_vals)
+    plot_solution_over_time(times_l, obj_vals, 'Grasp Subsequent NN')
     
 
     return best_percorsi, best_obj_val, residui_best
@@ -84,10 +89,11 @@ def GRASP_School_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
     - best_percorsi: i percorsi della soluzione migliore.
     - best_obj_val: il valore obiettivo della soluzione migliore.
     """
+    start_time = tm.time()
+    times_l = []
     best_percorsi = None
     best_obj_val = float('inf')  # Inizializza con un valore molto alto
 
-    iterazioni = []
     obj_vals = []
 
 
@@ -114,11 +120,12 @@ def GRASP_School_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
                 best_obj_val = ls_obj_val
                 residui_best = copy.deepcopy(residui_ls)
             
-            iterazioni.append(i+1)
-            obj_vals.append(ls_obj_val)
+            cur_time = tm.time() - start_time
+            times_l.append(cur_time)
+            obj_vals.append(best_obj_val)
         else:
             print("Local search non valida")
 
-    plot_solution_over_time(iterazioni, obj_vals)
+    plot_solution_over_time(times_l, obj_vals, 'Grasp School NN')
 
     return best_percorsi, best_obj_val, residui_best

@@ -143,6 +143,59 @@ def plot_all_results(results, img):
     plt.show(block=False)
 
 
+
+def plot_greedy_based_results(results, img, name):
+    width = 0.20  # the width of the bars
+    cm = 1 / 2.54  # centimeters in inches
+    fig, ax = plt.subplots(figsize=(40 * cm, 30 * cm))
+
+    if name == "SubsequentNN":
+      # Etichette degli assi X
+      x_labels = ['greedy subsequent NN', 'greedy Rand subsequent NN', 
+              'ls best Imp subsequent NN', 'ls first Imp subsequent NN', 
+              'grasp best Imp subsequent NN', 'grasp first Imp subsequent NN', 
+              'tabu best Imp subsequent NN', 'tabu first Imp subsequent NN', 
+              'ils best Imp subsequent NN', 'ils first Imp subsequent NN']
+    elif name == "SchoolNN":
+      # Etichette degli assi X
+      x_labels = ['greedy school NN', 'greedy Rand school NN', 
+              'ls best Imp school NN', 'ls first Imp school NN', 
+              'grasp best Imp school NN', 'grasp first Imp school NN', 
+              'tabu best Imp school NN', 'tabu first Imp school NN', 
+              'ils best Imp school NN', 'ils first Imp school NN']
+    else:
+      print("Errore, name non valido!")
+      
+    # Numero di elementi da rappresentare
+    n = len(results)
+
+    # Genera colori da una mappa di colori
+    colors = [plt.cm.get_cmap('rainbow')(i / n) for i in range(n)]
+
+    # Grafico a barre
+    rects = ax.bar(x_labels, results, color=colors)
+
+    # Formatta i numeri sull'asse Y
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
+
+    # Etichette per le barre - usiamo rects (BarContainer)
+    ax.bar_label(rects, fmt='%d')
+
+    # Aggiungi etichette e titolo
+    ax.set_ylabel('Valore funzione obiettivo')
+    ax.set_title('Risultati complessivi')
+
+    # Ruota le etichette dell'asse X
+    plt.xticks(rotation=-25)
+    fig.tight_layout()
+
+    # Salva l'immagine
+    save_img(img)
+
+    # Mostra il grafico
+    plt.show(block=False)
+
+
 def seconds_formatter(x, pos):
     return f'{int(x)} sec' 
 
@@ -220,11 +273,23 @@ def plot_time_results(results, img, medium=True):
     plt.show(block=False)
 
 
-def plot_solution_over_time(num_iterazioni, obj_vals):
+
+
+def plot_solution_over_time(time_in_seconds, obj_vals, name):
     """
     Grafica l'evoluzione del valore della funzione obiettivo nel tempo
     """
-    x = np.array(num_iterazioni)
+    # Converti il tempo in minuti
+    time_in_minutes = np.array(time_in_seconds) / 60
+    
+    # Controlla se l'ultimo elemento di time_in_minutes ha parte intera 0
+    if int(time_in_minutes[-1]) == 0:
+        x = np.array(time_in_seconds)
+        x_label = 'Tempo (secondi)'
+    else:
+        x = time_in_minutes
+        x_label = 'Tempo (minuti)'
+    
     y = np.array(obj_vals)
     plt.scatter(x, y, color='#10a0e8')
     plt.plot(x, y, color='#10a0e8')
@@ -246,10 +311,9 @@ def plot_solution_over_time(num_iterazioni, obj_vals):
     ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
 
     # Aggiungi etichette e titolo
-    plt.xlabel('Numero di Iterazioni')
+    plt.xlabel(x_label)
     plt.ylabel('Valore funzione obiettivo dell\'ottimo candidato')
-    plt.title('Risultati complessivi')
+    plt.title(f'Andamento obj_val dell\'incumbent nel tempo ({name})')
 
     plt.show()
-
   

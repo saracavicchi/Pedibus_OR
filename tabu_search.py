@@ -4,9 +4,12 @@ from funzione_obiettivo import *
 from controlli_ammissibilita import *
 from perturbazione_svuotamento import *
 from visualizza_grafici import *
+import time
 
 @timeit
 def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
+
+    start_time = time.time()
 
     residui_dict_copy = copy.deepcopy(residui_dict)
     current_percorsi = copy.deepcopy(percorsi)
@@ -17,14 +20,14 @@ def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
     best_all_residui = copy.deepcopy(residui_dict_copy)
 
     tabu = []  # Tabu list
-    max_tabu_size = 10
-    stallo = 150  # Numero massimo di iterazioni senza miglioramenti
+    max_tabu_size = 20
+    stallo = 200  # Numero massimo di iterazioni senza miglioramenti
     nonMigliorato = 0
-    max_iterazioni = 250
+    max_iterazioni = 350
     iterazioni = 0
     perturbazione = 10
 
-    iterazioni_l = []
+    times_l = []
     obj_vals = []
 
     while nonMigliorato < stallo and iterazioni < max_iterazioni:
@@ -148,12 +151,13 @@ def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
               nonMigliorato = 0
 
         obj_vals.append(best_all_obj_val)
-        iterazioni_l.append(iterazioni)
+        cur_time = time.time() - start_time
+        times_l.append(cur_time)
         
         iterazioni += 1
 
 
-    plot_solution_over_time(iterazioni_l, obj_vals)
+    plot_solution_over_time(times_l, obj_vals, 'Tabu Search Best Improvement')
     return best_all_percorsi, best_all_obj_val, best_all_residui
 
 
@@ -164,6 +168,7 @@ def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
 @timeit
 def tabu_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len):
 
+    start_time = time.time()
     residui_dict_copy = copy.deepcopy(residui_dict)
     current_percorsi = copy.deepcopy(percorsi)
     current_obj_val = obj_val  # Funzione obiettivo corrente
@@ -173,14 +178,14 @@ def tabu_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len):
     best_all_residui = copy.deepcopy(residui_dict_copy)
 
     tabu = []  # Tabu list
-    max_tabu_size = 10
-    stallo = 200  # Numero massimo di iterazioni senza miglioramenti
+    max_tabu_size = 20
+    stallo = 250  # Numero massimo di iterazioni senza miglioramenti
     nonMigliorato = 0
-    max_iterazioni = 300
+    max_iterazioni = 350
     iterazioni = 0
     perturbazione = 10
 
-    iterazioni_l = []
+    times_l = []
     obj_vals = []
 
 
@@ -320,12 +325,13 @@ def tabu_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len):
               nonMigliorato = 0
 
         obj_vals.append(best_all_obj_val)
-        iterazioni_l.append(iterazioni)
+        cur_time = time.time() - start_time
+        times_l.append(cur_time)
         
         iterazioni += 1
 
 
-    plot_solution_over_time(iterazioni_l, obj_vals)
+    plot_solution_over_time(times_l, obj_vals, 'Tabu Search Ibrida First Improvement')
     return best_all_percorsi, best_all_obj_val, best_all_residui
 
 
