@@ -275,7 +275,7 @@ def plot_time_results(results, img, medium=True):
 
 
 
-def plot_solution_over_time(time_in_seconds, obj_vals, name):
+def plot_solution_over_time(time_in_seconds, obj_vals, name, img):
     """
     Grafica l'evoluzione del valore della funzione obiettivo nel tempo
     """
@@ -314,6 +314,9 @@ def plot_solution_over_time(time_in_seconds, obj_vals, name):
     plt.xlabel(x_label)
     plt.ylabel('Valore funzione obiettivo dell\'ottimo candidato')
     plt.title(f'Andamento obj_val dell\'incumbent nel tempo ({name})')
+
+    # Salva l'immagine
+    save_img(img)
 
     plt.show()
   

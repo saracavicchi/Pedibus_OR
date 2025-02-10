@@ -5,7 +5,7 @@ from utils import timeit
 import random
 
 @timeit
-def subsequent_nearest_neighbour_randomized(G, residui_dict, delta, k):
+def subsequent_nearest_neighbour_randomized(G, residui_dict, delta, k, seed=None):
     """
     Funzione per trovare percorsi utilizzando l'algoritmo del nearest neighbour,
     partendo dalla scuola e rispettando un vincolo delta.
@@ -30,7 +30,10 @@ def subsequent_nearest_neighbour_randomized(G, residui_dict, delta, k):
     percorso = [current_node]  # Inizializza il primo percorso con la scuola.
 
     # Impostare un seed fisso per la riproducibilità
-    #random.seed(42)
+    if seed is not None:
+        random.seed(seed)
+    else:
+        random.seed() 
 
     # Continua finché ci sono nodi non visitati.
     while len(visited_nodes) < len(G.nodes()) - 1:  # Escludi la scuola dal conteggio.

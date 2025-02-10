@@ -7,7 +7,7 @@ from visualizza_grafici import *
 import time
 
 @timeit
-def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
+def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len, img):
 
     start_time = time.time()
 
@@ -23,7 +23,7 @@ def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
     max_tabu_size = 20
     stallo = 200  # Numero massimo di iterazioni senza miglioramenti
     nonMigliorato = 0
-    max_iterazioni = 350
+    max_iterazioni = 450
     iterazioni = 0
     perturbazione = 10
 
@@ -89,12 +89,9 @@ def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
 
               nonMigliorato = 0
               if best_mossa is not None:
-                  if best_mossa not in tabu:
+                  bam_k, bam_j = best_mossa
+                  if (bam_k, bam_j) not in tabu and (bam_j, bam_k) not in tabu:
                     tabu.append(best_mossa)
-              #if intensification_nodes:
-                  #for node in intensification_nodes:
-                      #if node not in tabu:
-                          #tabu.append(node)
               while len(tabu) > max_tabu_size:
                       tabu.pop(0)
           else:
@@ -103,7 +100,7 @@ def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
               if best_mossa is not None:
                   bam_k, bam_j = best_mossa
                   #print(bam_k)
-                  if (bam_k,bam_j) not in tabu and (bam_j, bam_k) not in tabu:
+                  if (bam_k, bam_j) not in tabu and (bam_j, bam_k) not in tabu:
                         tabu.append(best_mossa)
                         current_percorsi = best_percorsi
                         current_obj_val = best_obj_val
@@ -131,19 +128,10 @@ def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
             i += 1
 
 
-        if not mossa_migliorativa or ( iterazioni > 0 and iterazioni%perturbazione == 0 ):
-          #print("perturbazione random")
-          #check_solution(current_percorsi, G, delta)
-          #print("________")
+        if iterazioni > 0 and iterazioni%perturbazione == 0 : #prima era in or con not mossa migliorativa
           current_percorsi, residui_dict_copy = random_perturbation(G, residui_dict_copy, current_percorsi, delta, 0.5)
-          #print(current_percorsi)
           current_obj_val = objective_function(new_percorsi, G)
-          #print("dopo perturbazione random")
-          #check_solution(new_percorsi, G, delta)
-          #print("________")
-          #current_obj_val = nuovo_obj_val
-          #current_percorsi = copy.deepcopy(new_percorsi)
-          #residui_dict_copy = copy.deepcopy(residui_temp)
+          
           if current_obj_val < best_all_obj_val:
               best_all_percorsi = copy.deepcopy(new_percorsi)
               best_all_obj_val = nuovo_obj_val
@@ -157,7 +145,7 @@ def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
         iterazioni += 1
 
 
-    plot_solution_over_time(times_l, obj_vals, 'Tabu Search Best Improvement')
+    plot_solution_over_time(times_l, obj_vals, 'Tabu Search Best Improvement', img)
     return best_all_percorsi, best_all_obj_val, best_all_residui
 
 
@@ -166,7 +154,7 @@ def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
 
 
 @timeit
-def tabu_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len):
+def tabu_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len, img):
 
     start_time = time.time()
     residui_dict_copy = copy.deepcopy(residui_dict)
@@ -181,7 +169,7 @@ def tabu_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len):
     max_tabu_size = 20
     stallo = 250  # Numero massimo di iterazioni senza miglioramenti
     nonMigliorato = 0
-    max_iterazioni = 350
+    max_iterazioni = 450
     iterazioni = 0
     perturbazione = 10
 
@@ -276,8 +264,7 @@ def tabu_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len):
 
             if best_worse_mossa is not None:
                 bam_k, bam_j = best_worse_mossa
-                #print(bam_k)
-                if (bam_k,bam_j) not in tabu and (bam_j, bam_k) not in tabu:
+                if (bam_k,bam_j) not in tabu:
                     tabu.append(best_worse_mossa)
                     current_percorsi = best_worse_percorsi
                     current_obj_val = best_worse_obj_val
@@ -306,18 +293,10 @@ def tabu_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len):
 
 
         if iterazioni > 0 and iterazioni%perturbazione == 0 :
-          #print("perturbazione random")
-          #check_solution(current_percorsi, G, delta)
-          #print("________")
+         
           current_percorsi, residui_dict_copy = random_perturbation(G, residui_dict_copy, current_percorsi, delta, 0.5)
-          #print(current_percorsi)
           current_obj_val = objective_function(new_percorsi, G)
-          #print("dopo perturbazione random")
-          #check_solution(new_percorsi, G, delta)
-          #print("________")
-          #current_obj_val = nuovo_obj_val
-          #current_percorsi = copy.deepcopy(new_percorsi)
-          #residui_dict_copy = copy.deepcopy(residui_temp)
+          
           if current_obj_val < best_all_obj_val:
               best_all_percorsi = copy.deepcopy(new_percorsi)
               best_all_obj_val = nuovo_obj_val
@@ -331,7 +310,7 @@ def tabu_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len):
         iterazioni += 1
 
 
-    plot_solution_over_time(times_l, obj_vals, 'Tabu Search Ibrida First Improvement')
+    plot_solution_over_time(times_l, obj_vals, 'Tabu Search Ibrida First Improvement', img)
     return best_all_percorsi, best_all_obj_val, best_all_residui
 
 

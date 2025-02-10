@@ -59,7 +59,7 @@ def local_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
                 best_residui_dict = best_swap_residui
                 migliorato = True
 
-        # === FASE 2: Intensificazione - Diversificazione (node transfer), SOLO SE Best Improvement non ha migliorato ===
+        # === FASE 2: SOLO SE Best Improvement non ha migliorato ===
         if not migliorato:
             for i in range(len(current_percorsi)):
                 if len(current_percorsi[i]) <= max_len:

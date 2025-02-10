@@ -10,7 +10,7 @@ from visualizza_grafici import *
 
 
 @timeit
-def GRASP_subsequent_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
+def GRASP_subsequent_NN(G, residui_dict, delta, k, num_greedy, ls, max_len, img):
     """
     Ripete num_iterations volte una local search su una delle soluzioni prodotte dalla greedy randomizzata
     e restituisce la soluzione migliore trovata.
@@ -47,7 +47,7 @@ def GRASP_subsequent_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
 
         # Genera una soluzione greedy randomizzata
         residui_dict_copy = copy.deepcopy(residui_dict)
-        (g_percorsi, g_obj_val, residui_greedy), time = subsequent_nearest_neighbour_randomized(G, residui_dict_copy, delta, k)
+        (g_percorsi, g_obj_val, residui_greedy), time = subsequent_nearest_neighbour_randomized(G, residui_dict_copy, delta, k, i+25200)
 
         # Esegui la local search sulla soluzione generata
         if ls in funzioni:
@@ -66,13 +66,13 @@ def GRASP_subsequent_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
         else:
             print("Local search non valida")
 
-    plot_solution_over_time(times_l, obj_vals, 'Grasp Subsequent NN')
+    plot_solution_over_time(times_l, obj_vals, 'Grasp Subsequent NN', img)
     
 
     return best_percorsi, best_obj_val, residui_best
 
 @timeit
-def GRASP_School_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
+def GRASP_School_NN(G, residui_dict, delta, k, num_greedy, ls, max_len, img):
     """
     Ripete una local search su una delle soluzioni prodotte dalla greedy randomizzata
     e restituisce la soluzione migliore trovata.
@@ -126,6 +126,6 @@ def GRASP_School_NN(G, residui_dict, delta, k, num_greedy, ls, max_len):
         else:
             print("Local search non valida")
 
-    plot_solution_over_time(times_l, obj_vals, 'Grasp School NN')
+    plot_solution_over_time(times_l, obj_vals, 'Grasp School NN', img)
 
     return best_percorsi, best_obj_val, residui_best
