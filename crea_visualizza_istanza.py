@@ -10,62 +10,68 @@ def save_img(name):
 
 
 def plot_graph(G, name_img):
+  """
+  Disegna un grafo con i nodi posizionati in base alle coordinate (x, y) specificate per ciascun nodo.
+
+  Args:
+      G: Grafo da disegnare.
+      name_img: Nome dell'immagine da salvare.
+  """
 
   # Crea una lista di tutti i nodi nel grafo
   node_list = list(G.nodes())
 
   # Crea un dizionario che mappa ogni nodo alla sua posizione (x, y)
   # Le posizioni sono estratte dall'attributo 'pos' di ogni nodo nel grafo
-  positions = {node: G.nodes[node]['pos'] for node in node_list}
+  pos = {node: G.nodes[node]['pos'] for node in node_list}
 
-  # Crea un dizionario che mappa ogni nodo alla sua posizione, da usare per il disegno
-  # Questo è essenzialmente lo stesso di 'positions', ma potrebbe essere ridondante
-  pos = {node: positions[node] for node in node_list}
 
-  # Crea una nuova figura con una dimensione specifica (8x8 pollici)
+  # dimensione 8x8 pollici
   plt.figure(figsize=(8, 8))
 
   # Disegna il grafo usando le posizioni specificate
   # with_labels=True mostra le etichette dei nodi
-  # node_color imposta il colore dei nodi a azzurro chiaro
-  # node_size imposta la dimensione dei nodi
-  # font_size imposta la dimensione del font delle etichette dei nodi
   nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=500, font_size=10)
 
   # Ottiene gli attributi 'weight' (pesi) di tutti gli archi nel grafo
   edge_labels = nx.get_edge_attributes(G, 'weight')
 
-  # Disegna le etichette degli archi con i pesi, formattati a due cifre decimali
+  # Disegna le etichette degli archi con i pesi, formattati 
   # edge_labels è un dizionario che mappa ogni arco al suo peso
-  # Il formato f"{d['weight']:.2f}" viene usato per formattare il peso a due cifre decimali
-  nx.draw_networkx_edge_labels(G, pos, edge_labels={(i, j): f"{d['weight']:.2f}" for (i, j, d) in G.edges(data=True)})
+  nx.draw_networkx_edge_labels(G, pos, edge_labels={(i, j): f"{d['weight']:.0f}" for (i, j, d) in G.edges(data=True)})
 
-  # Imposta il titolo del grafico
   plt.title("Grafo con pesi che riflettono le distanze euclidee")
 
   save_img(name_img)
-
-  # Mostra il grafico
   plt.show(block=False)
 
 
 
+
+
+
+
+
+
 def plot_graph_results(G, percorsi, name_img):
+  """
+  Disegna un grafo con i nodi posizionati in base alle coordinate (x, y) specificate per ciascun nodo.
+  Disegna anche i percorsi specificati nel grafo, con colori diversi per ciascun percorso.
+
+  Args:
+      G: Grafo da disegnare.
+      percorsi: Una lista di percorsi. Ogni percorso è una lista di nodi.
+      name_img: Nome dell'immagine da salvare.
+  """
 
   # Crea una lista di tutti i nodi nel grafo
   node_list = list(G.nodes())
 
   # Crea un dizionario che mappa ogni nodo alla sua posizione (x, y)
   # Le posizioni sono estratte dall'attributo 'pos' di ogni nodo nel grafo
-  positions = {node: G.nodes[node]['pos'] for node in node_list}
+  pos = {node: G.nodes[node]['pos'] for node in node_list}
 
-  # Crea un dizionario che mappa ogni nodo alla sua posizione, da usare per il disegno
-  # Questo è essenzialmente lo stesso di 'positions', ma potrebbe essere ridondante
-  pos = {node: positions[node] for node in node_list}
-
-  # Crea una nuova figura con una dimensione specifica (8x8 pollici)
   plt.figure(figsize=(8, 8))
-
 
   # Numero di elementi da rappresentare
   n = len(percorsi)
@@ -75,7 +81,6 @@ def plot_graph_results(G, percorsi, name_img):
 
   # Disegna il grafo usando le posizioni specificate
   nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=500, edge_color='lightblue', font_size=10)
-  #nx.draw_networkx_edges(G, pos, edge_color='lightblue', width=1)
 
   # Disegna il grafo
   for i,p in enumerate(percorsi):
@@ -87,20 +92,22 @@ def plot_graph_results(G, percorsi, name_img):
   # Ottiene gli attributi 'weight' (pesi) di tutti gli archi nel grafo
   edge_labels = nx.get_edge_attributes(G, 'weight')
 
-  # Disegna le etichette degli archi con i pesi, formattati a due cifre decimali
+  # Disegna le etichette degli archi con i pesi, formattati
   # edge_labels è un dizionario che mappa ogni arco al suo peso
-  # Il formato f"{d['weight']:.2f}" viene usato per formattare il peso a due cifre decimali
-  nx.draw_networkx_edge_labels(G, pos, edge_labels={(i, j): f"{d['weight']:.2f}" for (i, j, d) in G.edges(data=True)})
+  nx.draw_networkx_edge_labels(G, pos, edge_labels={(i, j): f"{d['weight']:.0f}" for (i, j, d) in G.edges(data=True)})
 
-  # Imposta il titolo del grafico
   plt.title("Grafo risultante")
 
   save_img(name_img)
-
-  # Mostra il grafico
   plt.show(block=False)
 
-# Definizione della funzione "stampa_percorsi" che prende in input una lista di percorsi
+
+
+
+
+
+
+
 def stampa_percorsi(percorsi):
     """
     Stampa la rappresentazione visiva dei percorsi, numerandoli e
@@ -109,23 +116,24 @@ def stampa_percorsi(percorsi):
     Args:
         percorsi: Una lista di percorsi. Ogni percorso è una lista di nodi.
     """
-    # Stampa un'intestazione per la visualizzazione dei percorsi
+   
     print("### Visualizzazione dei Percorsi ###\n")
 
     # Itera attraverso la lista di percorsi usando enumerate per ottenere sia l'indice (i) che il percorso
-    # start=1 fa sì che l'indice parta da 1 invece che da 0
+    # start=1 fa sì che l'indice parta da 1 invece che da 0 (il primo elemento ha quindi indice 1)
     for i, percorso in enumerate(percorsi, start=1):
         # Converte il percorso (lista di nodi) in una stringa leggibile,
         # unendo i nodi con il simbolo " → "
         percorso_str = " → ".join(percorso)  # Combina i nodi con la freccia
 
-        # Stampa il numero del percorso e la sua rappresentazione come stringa
         print(f"Percorso {i}: {percorso_str}")
 
 
 
 
-# Definizione della funzione "generate_instance" che crea un'istanza del problema "Pedibus"
+
+
+
 def generate_instance(num_bambini, pos_min, pos_max, seed, delta):
     """
     Genera un'istanza del problema "Pedibus" come un grafo.
@@ -141,7 +149,7 @@ def generate_instance(num_bambini, pos_min, pos_max, seed, delta):
         Un grafo networkx che rappresenta l'istanza del problema.
     """
 
-    # Definisce il nome del nodo che rappresenta la scuola
+
     scuola = "Scuola"
 
     # Imposta il seed per il generatore di numeri casuali di numpy se viene fornito

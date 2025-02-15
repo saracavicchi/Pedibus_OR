@@ -1,16 +1,33 @@
 import copy
-from utils import timeit
+from utils import *
 from funzione_obiettivo import *
 from controlli_ammissibilita import *
 from trasferimenti_swap import *
-from distanze_residui import *
 
 @timeit
 def local_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
-    residui_dict_copy = copy.deepcopy(residui_dict)
+    """
+    Local Search Best Improvement.
+    Mossa: city swap: scambio di due nodi in un percorso.
 
+    Aggiunta: Intensificazione/Diversificazione: se la local search non migliora la soluzione, 
+    prova ad applicare una mossa diversa: svuotamento di eventuali percorsi con lunghezza
+    <= max_len.
+
+    Args:
+    - G: grafo del problema.
+    - residui_dict: dizionario dei residui.
+    - percorsi: lista dei percorsi.
+    - obj_val: valore obiettivo corrente.
+    - delta: tolleranza sulla durata del percorso.
+    - max_len: lunghezza massima del percorso da svuotare.
+
+    Returns:
+    - percorsi, obj_val, residui_dict: la soluzione migliore trovata.
+    """
+    residui_dict_copy = copy.deepcopy(residui_dict)
     current_percorsi = copy.deepcopy(percorsi)
-    current_obj_val = obj_val  # Funzione obiettivo corrente
+    current_obj_val = obj_val 
 
     migliorato = True
 
@@ -40,6 +57,7 @@ def local_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
                     percorso_test[k], percorso_test[j] = percorso_test[j], percorso_test[k]
 
                     if test_percorso_feasibility(percorso_test, G, delta):
+                        new_percorsi[i] = percorso_test
                         nuovo_obj_val = objective_function(new_percorsi, G)
 
                         # Se la mossa è migliorativa, aggiorna la soluzione
@@ -50,6 +68,7 @@ def local_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
 
                     # Ripristina lo scambio per provare altre combinazioni
                     percorso_test[k], percorso_test[j] = percorso_test[j], percorso_test[k]
+                    new_percorsi[i] = percorso_test
 
             # Se uno swap migliorativo è stato trovato, applicalo
             if best_percorso_swap is not None:
@@ -87,12 +106,37 @@ def local_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len):
 
 
 
+
+
+
+
+
+
 @timeit
 def local_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len):
+    """
+    Local Search First Improvement.
+    Mossa: city swap: scambio di due nodi in un percorso.
+
+    Aggiunta: Intensificazione/Diversificazione: se la local search non migliora la soluzione, 
+    prova ad applicare una mossa diversa: svuotamento di eventuali percorsi con lunghezza
+    <= max_len.
+
+    Args:
+    - G: grafo del problema.
+    - residui_dict: dizionario dei residui.
+    - percorsi: lista dei percorsi.
+    - obj_val: valore obiettivo corrente.
+    - delta: tolleranza sulla durata del percorso.
+    - max_len: lunghezza massima del percorso da svuotare.
+
+    Returns:
+    - percorsi, obj_val, residui_dict: la soluzione migliore trovata.
+    """
 
     residui_dict_copy = copy.deepcopy(residui_dict)
     current_percorsi = copy.deepcopy(percorsi)
-    current_obj_val = obj_val  # Funzione obiettivo corrente
+    current_obj_val = obj_val  
 
     migliorato = True
 
@@ -131,6 +175,7 @@ def local_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len):
                     else:
                         # Ripristina lo scambio se la mossa non è valida
                         percorso_test[k], percorso_test[j] = percorso_test[j], percorso_test[k]
+                        new_percorsi[i] = percorso_test
                 if migliorato:
                     break
             if migliorato:

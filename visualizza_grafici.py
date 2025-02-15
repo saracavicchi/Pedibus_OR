@@ -4,7 +4,14 @@ import matplotlib.ticker as ticker
 import numpy as np
 from crea_visualizza_istanza import save_img
 
+
+
 def plotSubSchResults(subsequentNN, schoolNN, name, img):
+    """
+    Crea un grafico a barre che mostra i risultati ottenuti.
+    Due barre per ogni tick, uno per la versione dell'algoritmo che usa la greedy subsequent NN 
+    e uno per la greedy school NN.
+    """
 
     if name == "Greedy":
       labels = ['Greedy', 'Gr Rand']
@@ -26,28 +33,27 @@ def plotSubSchResults(subsequentNN, schoolNN, name, img):
 
 
 
-    x = np.arange(len(labels))  # the label locations
-    width = 0.20  # the width of the bars
-    cm = 1/2.54  # centimeters in inches
+    x = np.arange(len(labels))  # Posizioni delle etichette
+    width = 0.20  
+    cm = 1/2.54  
     fig, ax = plt.subplots(figsize=(20*cm, 15*cm))
 
+    # Formatta i numeri sull'asse Y come interi
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
+
+    # Crea le barre
     rects1 = ax.bar(x - width/2, schoolNN, width, label=f'{name} School NN', color=colors[0])
     rects2 = ax.bar(x + width/2, subsequentNN, width, label=f'{name} Subsequent NN', color=colors[1])
 
-    # Add some text for labels, title and custom x-axis tick labels, etc.
+
     ax.set_ylabel(f'Risultati {name}')
     ax.set_title('Valore funzione obiettivo')
     ax.set_xticks(x, labels)
     ax.legend()
 
-    # Format
+    # Formatta le etichette delle barre
     ax.bar_label(rects1, padding=3, labels=[f'{int(v)}' for v in rects1.datavalues], fmt='%d')
     ax.bar_label(rects2, padding=3, labels=[f'{int(v)}' for v in rects2.datavalues], fmt='%d')
-
-
-    #ax.bar_label(rects1, padding=3)
-    #ax.bar_label(rects2, padding=3)
 
     fig.tight_layout()
 
@@ -57,14 +63,79 @@ def plotSubSchResults(subsequentNN, schoolNN, name, img):
     plt.show(block=False)
 
 
+
+
+
+
+def plotBestFirstResults(best, first, name, img):
+    """
+    Crea un grafico a barre che mostra i risultati ottenuti.
+    Due barre per ogni tick, uno per la versione dell'algoritmo che usa la best improvement
+    e uno per la first improvement.
+    """
+
+    if name == "Ls":
+      colors =['#8803fc', '#c286f7'] #viola
+    elif name == "GRASP":
+      colors =['#49bff5', '#036bfc'] #blu
+    elif name == "Tabu":
+      colors =['#fca103', '#fcc603'] #arancio
+    elif name == "ILS":
+      colors =['#fc0335', '#ed728a'] #rosso
+    else:
+      print("Errore, name non valido!")
+
+    labels = ['Subsequent NN', 'School NN']
+
+    x = np.arange(len(labels))  # posizione etichette
+    width = 0.20  
+    cm = 1/2.54
+    fig, ax = plt.subplots(figsize=(20*cm, 15*cm))
+
+    # Formatta i numeri sull'asse Y come interi
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
+
+    rects1 = ax.bar(x - width/2, best, width, label=f'{name} Best Improvement', color=colors[0])
+
+    if name != "Tabu":
+      rects2 = ax.bar(x + width/2, first, width, label=f'{name} First Improvement', color=colors[1])
+    else:
+      rects2 = ax.bar(x + width/2, first, width, label=f'{name} Adapted First Improvement', color=colors[1])
+
+    ax.set_ylabel(f'Risultati {name}')
+    ax.set_title('Valore funzione obiettivo')
+    ax.set_xticks(x, labels)
+    ax.legend()
+
+  
+    ax.bar_label(rects1, padding=3, labels=[f'{int(v)}' for v in rects1.datavalues], fmt='%d')
+    ax.bar_label(rects2, padding=3, labels=[f'{int(v)}' for v in rects2.datavalues], fmt='%d')
+
+
+    fig.tight_layout()
+    save_img(img)
+    plt.show(block=False)
+
+
+
+
+
+
+
+
 def plotMetaheuristicsResults(grasp, tabu, ils, img, bestImp = True):
+    """
+    Crea un grafico a barre che mostra i risultati ottenuti.
+    Tre barre per tick, uno per ogni metaeuristica.
+    Due tick sull'asse X: uno per la greedy subsequent NN e uno per la greedy school NN.
+    """
 
     labels = ['Greedy Subsequent NN', 'Greedy School NN']
 
 
-    x = np.arange(len(labels))  # the label locations
-    width = 0.25  # the width of the bars
-    cm = 1/2.54  # centimeters in inches
+    x = np.arange(len(labels))  
+    width = 0.25  
+    cm = 1/2.54 
     fig, ax = plt.subplots(figsize=(30*cm, 20*cm))
 
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
@@ -75,7 +146,6 @@ def plotMetaheuristicsResults(grasp, tabu, ils, img, bestImp = True):
     rects3 = ax.bar(x + width, ils, width, label='Iterated Local Search', color='#fc0335')  # Iterated Local Search
 
 
-    # Add some text for labels, title and custom x-axis tick labels, etc.
     if bestImp == True:
       ax.set_ylabel('Risultati Metaeuristiche (best improvement)')
     else:
@@ -84,26 +154,30 @@ def plotMetaheuristicsResults(grasp, tabu, ils, img, bestImp = True):
     ax.set_xticks(x, labels)
     ax.legend()
 
-    # Format
+
     ax.bar_label(rects1, padding=3, labels=[f'{int(v)}' for v in rects1.datavalues], fmt='%d')
     ax.bar_label(rects2, padding=3, labels=[f'{int(v)}' for v in rects2.datavalues], fmt='%d')
     ax.bar_label(rects3, padding=3, labels=[f'{int(v)}' for v in rects3.datavalues], fmt='%d')
 
-
-    #ax.bar_label(rects1, padding=3)
-    #ax.bar_label(rects2, padding=3)
-
     fig.tight_layout()
-
     save_img(img)
-
-    # Mostra il grafico
     plt.show(block=False)
 
 
-def plot_all_results(results, img):
-    width = 0.25  # the width of the bars
-    cm = 1 / 2.54  # centimeters in inches
+
+
+
+
+
+
+
+def plot_all_results(results, img, cw=False):
+    """
+    Crea un grafico a barre che mostra i risultati complessivi ottenuti.
+    Una barra per ogni algoritmo.
+    """
+    width = 0.25  
+    cm = 1 / 2.54  
     fig, ax = plt.subplots(figsize=(70 * cm, 30 * cm))
 
     # Etichette degli assi X
@@ -113,6 +187,11 @@ def plot_all_results(results, img):
             'tabu best Imp subsequent NN', 'tabu first Imp subsequent NN', 'tabu best Imp school NN', 'tabu first Imp school NN',
             'ils best Imp subsequent NN', 'ils first Imp subsequent NN', 'ils best Imp school NN', 'ils first Imp school NN']
     
+    # Aggiungi Clark-Wright se richiesto
+    if cw == True:
+       x_labels.append('Clark-Wright')
+
+
     # Numero di elementi da rappresentare
     n = len(results)
 
@@ -122,31 +201,35 @@ def plot_all_results(results, img):
     # Grafico a barre
     rects = ax.bar(x_labels, results, color=colors)
 
-    # Formatta i numeri sull'asse Y
+    # Formatta i numeri sull'asse Y come interi
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
 
-    # Etichette per le barre - usiamo rects (BarContainer)
     ax.bar_label(rects, fmt='%d')
-
-    # Aggiungi etichette e titolo
     ax.set_ylabel('Valore funzione obiettivo')
     ax.set_title('Risultati complessivi')
 
     # Ruota le etichette dell'asse X
     plt.xticks(rotation=-25)
     fig.tight_layout()
-
-    # Salva l'immagine
     save_img(img)
-
-    # Mostra il grafico
     plt.show(block=False)
 
 
 
+
+
+
+
+
+
 def plot_greedy_based_results(results, img, name):
-    width = 0.20  # the width of the bars
-    cm = 1 / 2.54  # centimeters in inches
+    """
+    Crea un grafico a barre che mostra i risultati ottenuti.
+    Due barre per ogni tick, una per la versione dell'algoritmo che usa la greedy subsequent NN 
+    e uno per la versione che usa la greedy school NN.
+    """
+    width = 0.20  
+    cm = 1 / 2.54 
     fig, ax = plt.subplots(figsize=(40 * cm, 30 * cm))
 
     if name == "SubsequentNN":
@@ -178,10 +261,9 @@ def plot_greedy_based_results(results, img, name):
     # Formatta i numeri sull'asse Y
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
 
-    # Etichette per le barre - usiamo rects (BarContainer)
     ax.bar_label(rects, fmt='%d')
 
-    # Aggiungi etichette e titolo
+
     ax.set_ylabel('Valore funzione obiettivo')
     ax.set_title('Risultati complessivi')
 
@@ -191,19 +273,31 @@ def plot_greedy_based_results(results, img, name):
 
     # Salva l'immagine
     save_img(img)
-
-    # Mostra il grafico
     plt.show(block=False)
 
 
+
+
+
+
+# Funzione per formattare l'asse delle y in secondi
 def seconds_formatter(x, pos):
     return f'{int(x)} sec' 
+
+
+
+
 
 
 # Funzione per formattare l'asse delle y in minuti
 def minutes_formatter(x, pos):
     minutes = x / 60  # Converte i secondi in minuti
     return f'{int(minutes)} min'  # Formatta il valore come minuti
+
+
+
+
+
 
 # Funzione per formattare il tempo in ore, minuti e secondi
 def time_formatter(x):
@@ -212,6 +306,12 @@ def time_formatter(x):
     seconds = int(x % 60)
     return f'{hours}h {minutes}m {seconds}s'
 
+
+
+
+
+
+# Funzione per formattare il tempo in minuti, secondi e millisecondi
 def time_formatter_small(x):
     hours = int(x // 3600)
     minutes = int((x % 3600) // 60)
@@ -219,11 +319,21 @@ def time_formatter_small(x):
     milliseconds = int((x - int(x)) * 1000)  # Calcola i millisecondi
     return f'{minutes}m {seconds}s {milliseconds}ms'
 
-# Funzione per plottare i risultati con formattazione del tempo
-def plot_time_results(results, img, medium=True):
+
+
+
+
+
+
+
+def plot_time_results(results, img, medium=True, cw=False):
+    """
+    Crea un grafico a barre che mostra i tempi di esecuzione.
+    Una barra per ogni algoritmo con il tempo impiegato.
+    """
    
-    width = 0.2  # the width of the bars
-    cm = 1 / 2.54  # centimeters in inches
+    width = 0.2 
+    cm = 1 / 2.54 
     fig, ax = plt.subplots(figsize=(70 * cm, 30 * cm))
 
     # Etichette degli assi X
@@ -232,6 +342,11 @@ def plot_time_results(results, img, medium=True):
             'grasp best Imp subsequent NN', 'grasp first Imp subsequent NN', 'grasp best Imp school NN','grasp first Imp school NN', 
             'tabu best Imp subsequent NN', 'tabu first Imp subsequent NN', 'tabu best Imp school NN', 'tabu first Imp school NN',
             'ils best Imp subsequent NN', 'ils first Imp subsequent NN', 'ils best Imp school NN', 'ils first Imp school NN']
+    
+    # Aggiungi Clark-Wright se richiesto
+    if cw == True:
+       x_labels.append('Clark-Wright')
+
 
     # Numero di elementi da rappresentare
     n = len(results)
@@ -254,8 +369,6 @@ def plot_time_results(results, img, medium=True):
       labels = [time_formatter_small(x) for x in results]  # Usa i valori di 'results' per formattare il tempo
        
 
-    
-
     # Etichette per le barre
     ax.bar_label(rects, labels=labels, padding=3)
 
@@ -268,16 +381,20 @@ def plot_time_results(results, img, medium=True):
 
     # Salva l'immagine
     save_img(img)
-
-    # Mostra il grafico
     plt.show(block=False)
+
+
+
+
+
+
 
 
 
 
 def plot_solution_over_time(time_in_seconds, obj_vals, name, img):
     """
-    Grafica l'evoluzione del valore della funzione obiettivo nel tempo
+    Grafica l'andamento del valore della funzione obiettivo nel tempo
     """
     # Converti il tempo in minuti
     time_in_minutes = np.array(time_in_seconds) / 60

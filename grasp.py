@@ -12,25 +12,30 @@ from visualizza_grafici import *
 @timeit
 def GRASP_subsequent_NN(G, residui_dict, delta, k, num_greedy, ls, max_len, img):
     """
-    Ripete num_iterations volte una local search su una delle soluzioni prodotte dalla greedy randomizzata
+    Algoritmo GRASP con subsequent nearest neighbour randomizzato.
+    Ripete num_greedy volte una local search Best Improvement o First Improvement 
+    su una delle soluzioni prodotte dalla greedy randomizzata
     e restituisce la soluzione migliore trovata.
 
     Parametri:
-    - Gr: il grafo.
+    - G: il grafo.
+    - residui_dict: il dizionario dei residui.
     - delta: il parametro di tolleranza per la durata del percorso.
     - k: numero di vicini da considerare nella greedy randomizzata.
     - num_greedy: numero di esecuzioni della greedy.
     - ls: nome della local search da eseguire
     - max_len: lunghezza massima del percorso da provare a svuotare
+    - img: nome dell'immagine per salvare il grafico
 
     Ritorna:
     - best_percorsi: i percorsi della soluzione migliore.
     - best_obj_val: il valore obiettivo della soluzione migliore.
+    - best_residui: il dizionario dei residui della soluzione migliore.
     """
     start_time = tm.time()
     times_l = []
     best_percorsi = None
-    best_obj_val = float('inf')  # Inizializza con un valore molto alto
+    best_obj_val = float('inf')  
     residui_best = None
 
     
@@ -41,13 +46,16 @@ def GRASP_subsequent_NN(G, residui_dict, delta, k, num_greedy, ls, max_len, img)
         "local_search_bI": local_search_bI,
         "local_search_fI": local_search_fI,
     }
-
+    best_i=None
     for i in range(num_greedy):
         print(i+1)
+        
 
         # Genera una soluzione greedy randomizzata
         residui_dict_copy = copy.deepcopy(residui_dict)
-        (g_percorsi, g_obj_val, residui_greedy), time = subsequent_nearest_neighbour_randomized(G, residui_dict_copy, delta, k, i+25200)
+        #(g_percorsi, g_obj_val, residui_greedy), time = subsequent_nearest_neighbour_randomized(G, residui_dict_copy, delta, k, i+73500)
+        (g_percorsi, g_obj_val, residui_greedy), time = subsequent_nearest_neighbour_randomized(G, residui_dict_copy, delta, k)
+
 
         # Esegui la local search sulla soluzione generata
         if ls in funzioni:
@@ -59,31 +67,44 @@ def GRASP_subsequent_NN(G, residui_dict, delta, k, num_greedy, ls, max_len, img)
                 best_percorsi = copy.deepcopy(ls_percorsi)
                 best_obj_val = ls_obj_val
                 residui_best = copy.deepcopy(residui_ls)
+                best_i = i
             
             cur_time = tm.time() - start_time
             times_l.append(cur_time)
             obj_vals.append(best_obj_val)
-        else:
+        else: 
             print("Local search non valida")
 
     plot_solution_over_time(times_l, obj_vals, 'Grasp Subsequent NN', img)
-    
-
+    print(best_i)
     return best_percorsi, best_obj_val, residui_best
+
+
+
+
+
+
+
+
+
 
 @timeit
 def GRASP_School_NN(G, residui_dict, delta, k, num_greedy, ls, max_len, img):
     """
-    Ripete una local search su una delle soluzioni prodotte dalla greedy randomizzata
+    Algortimo GRASP con school nearest neighbour randomizzato.
+    Ripete num_greedy volte una local search Best Improvement o First Improvement 
+    su una delle soluzioni prodotte dalla greedy randomizzata
     e restituisce la soluzione migliore trovata.
 
     Parametri:
     - G: il grafo.
+    - residui_dict: il dizionario dei residui.
     - delta: il parametro di tolleranza per la durata del percorso.
     - k: numero di opzioni alternative internamente a greedy.
     - num_greedy: numero di esecuzioni della greedy.
     - ls: local searh da eseguire
     - max_len: lunghezza massima del percorso da provare a svuotare
+    - img: nome dell'immagine per salvare il grafico
 
     Ritorna:
     - best_percorsi: i percorsi della soluzione migliore.

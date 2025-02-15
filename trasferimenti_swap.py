@@ -19,7 +19,7 @@ def node_transfer(percorsi, src, G, residui_dict, delta):
         - (percorsi_originali, residui_originali) se almeno un nodo non può essere trasferito
     """
 
-    # Creiamo copie temporanee per evitare modifiche irreversibili
+
     percorsi_temp = copy.deepcopy(percorsi)
     residui_dict_temp = copy.deepcopy(residui_dict)
 
@@ -36,18 +36,19 @@ def node_transfer(percorsi, src, G, residui_dict, delta):
 
         # Ottieni gli indici unici dei percorsi vicini
         percorsi_vicini = list(set(vicino[1] for vicino in nodi_vicini))
-        #print(src, percorsi_vicini)
+        
         moved = False  # Flag per capire se il nodo è stato trasferito
 
         for vicino in percorsi_vicini:
+            # Verifica se il nodo può essere inserito nel percorso vicino
             ris = test_node_in_percorso_best_pos_feasibility(G, residui_dict_temp, node, percorsi_temp[vicino], delta)
-            #print(ris, vicino)
-            #print(test_node_in_percorso_feasibility(G, node, percorsi_temp[vicino], delta))
+            
+            # il nodo può essere inserito
             if ris is not None:
                 pos, residuo = ris
                 percorsi_temp[src].remove(node)
                 percorsi_temp[vicino].insert(pos, node)
-                #print(node,percorsi_temp[vicino], pos, test_percorso_feasibility(percorsi_temp[vicino], G, delta))
+                
 
                 # Aggiorna residui
                 residui_dict_temp[node] = residuo
@@ -60,52 +61,84 @@ def node_transfer(percorsi, src, G, residui_dict, delta):
 
         # Se il nodo non è stato spostato, annulla tutte le modifiche e ritorna l'originale
         if not moved:
-            #print(f"nodo {node} non spostato")
             return percorsi, residui_dict
 
     # Se il percorso è stato completamente svuotato, lo rimuoviamo
     if len(percorsi_temp[src]) == 1:  # Rimasta solo la scuola
         percorsi_temp.pop(src)
-        #print("riuscito")
         return percorsi_temp, residui_dict_temp  # Restituisce i percorsi aggiornati
 
     # Se il percorso non è stato completamente svuotato, annulliamo tutte le modifiche
     return percorsi, residui_dict
 
 
-import copy
 
-def node_swap(Gr, percorso, delta):
+
+
+
+
+
+
+### FUNZIONE NON USATA
+def node_swap(G, percorso, delta):
   """
   Prova a scambiare due nodi del percorso.
+  Valuta tutti gli scambi possibili e restituisce il migliore.
+  Attenzione: non applica di suo lo swap, ma restituisce i nodi da scambiare.
+
+  Args:
+  - G: il grafo.
+  - percorso: il percorso da modificare.
+  - delta: il parametro di tolleranza per la durata del percorso.
+
+  Ritorna:
+  - La coppia di nodi migliore da scambiare e i residui dei nodi del percorso
+    dopo lo scambio o None se non è possibile
+    fare nessuno scambio.
   """
   percorso_test = copy.deepcopy(percorso)
   best_residui = somma_residui_percorso(G, percorso)
   best_swap = None
-  G = copy.deepcopy(Gr)
 
   for i in range(1, len(percorso_test) - 1):
     for j in range(i + 1, len(percorso_test)):
-      percorso_test[i], percorso_test[j] = percorso_test[j], percorso_test[i]
 
+      # Scambia i nodi i e j
+      percorso_test[i], percorso_test[j] = percorso_test[j], percorso_test[i]
+      
+      # Verifica se il percorso con lo scambio è ammissibile
       if test_percorso_feasibility(percorso_test, G, delta):
         residui = somma_residui_percorso(G, percorso_test)
         if residui > best_residui:
           best_residui = residui
           best_swap = (i, j)
-      #else:
-        #percorso_test[i], percorso_test[j] = percorso_test[j], percorso_test[i]
 
   if best_swap is not None:
-    return best_swap, G
+    return best_swap, best_residui
   else:
     return None
 
 
+
+
+
+
+
+### FUNZIONE NON USATA
 def apply_swap(G, percorsi, residui_dict, percorso, swap):
   """
   Applica lo swap al percorso specificato e aggiorna i percorsi.
-  CALCOLA ANCHE I RESIDUI AGGIORNATI DEL PERCORSO
+  CALCOLA ANCHE I RESIDUI AGGIORNATI DEL PERCORSO.
+
+  Args: 
+  - G: il grafo.
+  - percorsi: lista dei percorsi.
+  - residui_dict: i residui dei nodi.
+  - percorso: il percorso da modificare.
+  - swap: la coppia di nodi da scambiare.
+
+  Ritorna:
+  - I percorsi aggiornati e i residui dei nodi aggiornati.
   """
   residui_dict_copy = copy.deepcopy(residui_dict)
   percorsi_test = copy.deepcopy(percorsi)

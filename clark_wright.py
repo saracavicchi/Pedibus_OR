@@ -22,7 +22,9 @@ def creazione_petali(G, residui_dict, delta):
 
 def best_merge(G, residui_dict, percorsi, delta):
   """
-  Restituisce il miglior merge tra i percorsi
+  Restituisce il miglior merge tra i percorsi: 
+  la coppia di percorsi che, se uniti, massimizzano i residui 
+  dei nodi del percorso che si viene a creare.
   """
 
   residui_dict_copy = copy.deepcopy(residui_dict)

@@ -2,6 +2,15 @@ import time
 import copy 
 
 def timeit(func):
+    """
+    Decorator che calcola il tempo impiegato per eseguire una funzione.
+
+    Args:
+    - func: la funzione da decorare.
+
+    Returns:
+    - Il risultato della funzione e il tempo impiegato.
+    """
     def wrapper(*args, **kwargs):
         start = time.perf_counter()
         result = func(*args, **kwargs)
@@ -19,6 +28,9 @@ def timeit(func):
 
 
 
+
+
+
 def somma_residui_percorso(residui_dict, percorso):
   """
   Restituisce la somma dei residui (della distanza massima che ciascun bambino
@@ -27,6 +39,11 @@ def somma_residui_percorso(residui_dict, percorso):
 
   tot_sum = sum(residui_dict[nodo]for nodo in percorso if nodo != 'Scuola')
   return tot_sum
+
+
+
+
+
 
 def calcola_residuo(G, nodo, percorso, delta):
   """
@@ -39,6 +56,11 @@ def calcola_residuo(G, nodo, percorso, delta):
 
 
   return G.nodes[nodo]['max_distance'] - dist
+
+
+
+
+
 
 
 
@@ -56,6 +78,11 @@ def calcola_residui_nodi_percorso(G, residui_dict, percorso, delta):
     residui_dict_copy[nodo] = residuo
 
   return residui_dict_copy
+
+
+
+
+
 
 def somma_dist_percorso(G, percorso):
   """

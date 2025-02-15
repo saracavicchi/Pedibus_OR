@@ -5,7 +5,7 @@ from utils import *
 def check_solution(percorsi, G, delta):
     """
     Verifica se la soluzione proposta è corretta, ossia:
-    - Tutti i percorsi rispettano il vincolo della distanza espresso da delta.
+    - Tutti i nodi in tutti i percorsi rispettano il vincolo della distanza espresso da delta.
     - Ogni nodo (eccetto la scuola) appare esattamente in un percorso.
     - La scuola appare in ogni percorso.
     """
@@ -50,6 +50,9 @@ def check_solution(percorsi, G, delta):
     else:
         print("Soluzione ammissibile.")
         return True
+    
+
+
 
 
 def test_percorso_feasibility(percorso, G, delta):
@@ -80,7 +83,6 @@ def test_percorso_feasibility(percorso, G, delta):
 
         # Verifica il vincolo di ammissibilità per il nodo i
         if distanza_accumulata > G.nodes[percorso[i+1]]['max_distance']:
-
             return False  # Il percorso non è ammissibile
 
     return True  # Se nessuna violazione è stata trovata, il percorso è valido
@@ -107,24 +109,39 @@ def test_node_in_percorso_feasibility(G, node, percorso, delta):
     return -1
 
 
+
+
+
 def test_node_feasibility(G, node, percorso, delta):
     """
-    Verifica se l'aggiunta di un nodo alla fine di un percorso è ammissibile,
-    considerando il vincolo di lunghezza del percorso definito da delta.
+    Verifica se l'aggiunta di un nodo alla FINE di un percorso è ammissibile,
+    considerando il vincolo di distanza massima percorribile definito da delta.
 
-    Restituisce True o False
+    Args:
+        G: Il grafo che rappresenta l'istanza del problema.
+        node: Il nodo che si sta considerando di aggiungere al percorso.
+        percorso: Il percorso a cui si prova ad aggiungere node.
+        delta: Il fattore di tolleranza per la distanza percorribile.
+
+    Restituisce:
+        True o False
     """
 
-    # Se il percorso contiene solo la scuola, è sempre ammissibile
+    # Se il percorso contiene solo la scuola, è sempre ammissibile l'aggiunta di un nodo
     if len(percorso) == 1:
         return True
     else:
       dist = somma_dist_percorso(G, percorso)
       final_node = percorso[-1]
+      #Se la distanza massima del nodo è maggiore o uguale alla distanza percorsa fino a quel punto 
+      # + la distanza tra il nodo e il nodo finale del percorso allora il nodo può essere inserito
       if G.nodes[node]['max_distance'] >= dist + G[final_node][node]['weight']:
         return True
       else:
         return False
+
+
+
 
 
 
@@ -137,14 +154,15 @@ def test_node_pos_k_feasibility(G, residui_dict, node, percorso, delta, k):
         G: Il grafo che rappresenta l'istanza del problema.
         residui_dict: Il dizionario che contiene i residui di ciascun nodo.
         node: Il nodo che si sta considerando di aggiungere al percorso.
-        percorso: Il percorso corrente (con la scuola sempre in posizione 0).
-        delta: Il fattore di tolleranza per la lunghezza del percorso.
+        percorso: Il percorso a cui si prova ad aggiungere node.
+        delta: Il fattore di tolleranza 
         k: La posizione in cui si vuole aggiungere il nodo (k >= 1).
 
     Returns:
         - None se il nodo non è inseribile in posizione k.
         - La somma dei residui del percorso e il residuo del nodo se è inseribile.
     """
+
     residui_dict_copy = copy.deepcopy(residui_dict)
 
     # === CASO 1: INSERIMENTO IN ULTIMA POSIZIONE ===
@@ -192,12 +210,29 @@ def test_node_pos_k_feasibility(G, residui_dict, node, percorso, delta, k):
     return None
 
 
+
+
+
+
+
+
 def test_node_in_percorso_best_pos_feasibility(G,residui_dict, node, percorso, delta):
     """
     Verifica se 'node' può essere inserito in 'percorso', rispettando i vincoli.
     Ritorna la MIGLIOR posizione in cui il nodo può essere inserito
     e il residuo del nodo se fosse spostato nel percorso oppure None se non è possibile.
-    Migliore nel senso che va a massimizzare la somma dei residui del percorso
+    Migliore nel senso che va a massimizzare la somma dei residui del percorso.
+
+    Args:
+        G: Grafo del problema.
+        residui_dict: Dizionario con i residui per ogni nodo.
+        node: Nodo da inserire.
+        percorso: Percorso in cui inserire il nodo.
+        delta: Fattore di tolleranza.
+    
+    Returns:
+        - La posizione migliore in cui inserire il nodo e il residuo del nodo se fosse inserito.
+        - None se il nodo non può essere inserito
     """
 
     max_residui_percorso = float('-inf')
