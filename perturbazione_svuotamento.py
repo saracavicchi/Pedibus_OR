@@ -99,8 +99,8 @@ def svuota_percorso(G, residui_dict, percorsi, src, delta):
     - delta: fattore di tolleranza.
 
     Returns:
-    - Una lista di percorsi con il percorso svuotato.
-    - Un dizionario aggiornato dei residui.
+    - Una lista di percorsi.
+    - Un dizionario dei residui.
     - True se il percorso è stato svuotato, False altrimenti.
   """
 

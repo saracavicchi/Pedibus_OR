@@ -53,8 +53,8 @@ def GRASP_subsequent_NN(G, residui_dict, delta, k, num_greedy, ls, max_len, img)
 
         # Genera una soluzione greedy randomizzata
         residui_dict_copy = copy.deepcopy(residui_dict)
-        #(g_percorsi, g_obj_val, residui_greedy), time = subsequent_nearest_neighbour_randomized(G, residui_dict_copy, delta, k, i+73500)
-        (g_percorsi, g_obj_val, residui_greedy), time = subsequent_nearest_neighbour_randomized(G, residui_dict_copy, delta, k)
+        (g_percorsi, g_obj_val, residui_greedy), time = subsequent_nearest_neighbour_randomized(G, residui_dict_copy, delta, k, i+73500)
+        #(g_percorsi, g_obj_val, residui_greedy), time = subsequent_nearest_neighbour_randomized(G, residui_dict_copy, delta, k)
 
 
         # Esegui la local search sulla soluzione generata

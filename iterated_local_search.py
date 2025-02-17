@@ -51,7 +51,7 @@ def iterated_local_search(G, residui_dict, percorsi, obj_val, delta, max_len, ls
 
 
     T = 160  # Temperatura iniziale 
-    T_frozen = 2  # Temperatura minima (quando fermiamo la ricerca) 
+    T_frozen = 1  # Temperatura minima (quando fermiamo la ricerca) 
     alpha = 0.6  # Fattore di raffreddamento
 
     # Applica la ricerca locale
@@ -65,7 +65,7 @@ def iterated_local_search(G, residui_dict, percorsi, obj_val, delta, max_len, ls
     # Ciclo principale dell'ILS: Principio del Simulated Annealing
     while T > T_frozen:
         
-        for _ in range(7):  # Numero di iterazioni interne per raggiungere condizione di equilibrio
+        for _ in range(10):  # Numero di iterazioni interne per raggiungere condizione di equilibrio
             print(f"Temperatura: {T}, Current OV: {current_obj_val}, Best OV: {best_all_obj_val}")
             
             # Perturbazione casuale della soluzione corrente

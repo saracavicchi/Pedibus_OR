@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 
+
 def save_img(name):
   """
   Salva l'immagine corrente in un file con il nome specificato.
@@ -121,10 +122,11 @@ def stampa_percorsi(percorsi):
 
     # Itera attraverso la lista di percorsi usando enumerate per ottenere sia l'indice (i) che il percorso
     # start=1 fa sì che l'indice parta da 1 invece che da 0 (il primo elemento ha quindi indice 1)
+
     for i, percorso in enumerate(percorsi, start=1):
         # Converte il percorso (lista di nodi) in una stringa leggibile,
         # unendo i nodi con il simbolo " → "
-        percorso_str = " → ".join(percorso)  # Combina i nodi con la freccia
+        percorso_str = " - ".join(percorso)  # Combina i nodi con la freccia
 
         print(f"Percorso {i}: {percorso_str}")
 

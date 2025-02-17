@@ -45,9 +45,9 @@ def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len, img):
 
     tabu = []  # Tabu list
     max_tabu_size = 20
-    stallo = 200  # Numero massimo di iterazioni senza miglioramenti
+    stallo = 250  # Numero massimo di iterazioni senza miglioramenti
     nonMigliorato = 0
-    max_iterazioni = 500
+    max_iterazioni = 900
     iterazioni = 0
     perturbazione = 10
 
@@ -96,6 +96,7 @@ def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len, img):
 
                     # Ripristina lo scambio 
                     percorso_test[k], percorso_test[j] = percorso_test[j], percorso_test[k]
+                    new_percorsi[i] = percorso_test
 
 
         if mossa_migliorativa:
@@ -137,28 +138,32 @@ def tabu_search_bI(G, residui_dict, percorsi, obj_val, delta, max_len, img):
           #Intensificazione: prova svuotamento percorsi corti
           while i < len(current_percorsi):
             if len(current_percorsi[i]) <= max_len:
-                current_percorsi, residui_temp, svuotato = svuota_percorso(G, residui_dict_copy, current_percorsi, i, delta)
+                temp_percorsi, residui_temp, svuotato = svuota_percorso(G, residui_dict_copy, current_percorsi, i, delta)
                 if svuotato:
-                    nuovo_obj_val = objective_function(current_percorsi, G)
+                    nuovo_obj_val = objective_function(temp_percorsi, G)
 
                     if nuovo_obj_val < best_all_obj_val:
-                        best_all_percorsi = copy.deepcopy(current_percorsi)
+                        best_all_percorsi = copy.deepcopy(temp_percorsi)
                         best_all_obj_val = nuovo_obj_val
                         best_all_residui = copy.deepcopy(residui_temp)
                         current_obj_val = nuovo_obj_val
+                        current_percorsi = copy.deepcopy(temp_percorsi)
                         residui_dict_copy = copy.deepcopy(residui_temp)
                         nonMigliorato = 0
+                        break #termina se un percorso viene svuotato
             i += 1
+        else: 
+            nonMigliorato += 1
 
         #perturbazione casuale 
         if iterazioni > 0 and iterazioni%perturbazione == 0 : #prima era in or con not mossa migliorativa
           current_percorsi, residui_dict_copy = random_perturbation(G, residui_dict_copy, current_percorsi, delta, 0.5)
-          current_obj_val = objective_function(new_percorsi, G)
+          current_obj_val = objective_function(current_percorsi, G)
           
           if current_obj_val < best_all_obj_val:
-              best_all_percorsi = copy.deepcopy(new_percorsi)
-              best_all_obj_val = nuovo_obj_val
-              best_all_residui = copy.deepcopy(residui_temp)
+              best_all_percorsi = copy.deepcopy(current_percorsi)
+              best_all_obj_val = current_obj_val
+              best_all_residui = copy.deepcopy(residui_dict_copy)
               nonMigliorato = 0
 
         obj_vals.append(best_all_obj_val)
@@ -221,7 +226,7 @@ def tabu_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len, img):
     max_tabu_size = 20
     stallo = 250  # Numero massimo di iterazioni senza miglioramenti
     nonMigliorato = 0
-    max_iterazioni = 500
+    max_iterazioni = 900
     iterazioni = 0
     perturbazione = 10
 
@@ -280,6 +285,7 @@ def tabu_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len, img):
 
 
                     percorso_test[k], percorso_test[j] = percorso_test[j], percorso_test[k]
+                    new_percorsi[i] = percorso_test
 
                     if mossa_migliorativa:
                         break
@@ -325,32 +331,35 @@ def tabu_search_fI(G, residui_dict, percorsi, obj_val, delta, max_len, img):
                     tabu.pop(0)
                 
 
-            #Intensificazione: prova a svuotare percorsi corti
+            #Intensificazione: prova svuotamento percorsi corti
             while i < len(current_percorsi):
                 if len(current_percorsi[i]) <= max_len:
-                    current_percorsi, residui_temp, svuotato = svuota_percorso(G, residui_dict_copy, current_percorsi, i, delta)
+                    temp_percorsi, residui_temp, svuotato = svuota_percorso(G, residui_dict_copy, current_percorsi, i, delta)
                     if svuotato:
-                        nuovo_obj_val = objective_function(current_percorsi, G)
+                        nuovo_obj_val = objective_function(temp_percorsi, G)
 
                         if nuovo_obj_val < best_all_obj_val:
-                            best_all_percorsi = copy.deepcopy(current_percorsi)
+                            best_all_percorsi = copy.deepcopy(temp_percorsi)
                             best_all_obj_val = nuovo_obj_val
                             best_all_residui = copy.deepcopy(residui_temp)
                             current_obj_val = nuovo_obj_val
+                            current_percorsi = copy.deepcopy(temp_percorsi)
                             residui_dict_copy = copy.deepcopy(residui_temp)
                             nonMigliorato = 0
+                            break #termina se un percorso viene svuotato
                 i += 1
+        else: 
+            nonMigliorato += 1
 
-        #perturbazione casuale
-        if iterazioni > 0 and iterazioni%perturbazione == 0 :
-         
+        #perturbazione casuale 
+        if iterazioni > 0 and iterazioni%perturbazione == 0 : #prima era in or con not mossa migliorativa
           current_percorsi, residui_dict_copy = random_perturbation(G, residui_dict_copy, current_percorsi, delta, 0.5)
-          current_obj_val = objective_function(new_percorsi, G)
+          current_obj_val = objective_function(current_percorsi, G)
           
           if current_obj_val < best_all_obj_val:
-              best_all_percorsi = copy.deepcopy(new_percorsi)
-              best_all_obj_val = nuovo_obj_val
-              best_all_residui = copy.deepcopy(residui_temp)
+              best_all_percorsi = copy.deepcopy(current_percorsi)
+              best_all_obj_val = current_obj_val
+              best_all_residui = copy.deepcopy(residui_dict_copy)
               nonMigliorato = 0
 
         obj_vals.append(best_all_obj_val)

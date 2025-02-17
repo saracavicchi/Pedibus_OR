@@ -116,6 +116,8 @@ def school_nearest_neighbour(G, residui_dict, delta):
                 # Se non viene trovato un percorso adatto, crea un nuovo percorso.
                 percorso = ['Scuola']  # Crea un nuovo percorso
                 percorsi.append(percorso)
+                residuo = calcola_residuo(G, node, percorso, delta)
+                residui_dict_copy[node]= residuo
                 percorso.append(node)  # Aggiungi il nodo al nuovo percorso
                 visited_nodes.add(node)  # Segna il nodo come visitato
 
